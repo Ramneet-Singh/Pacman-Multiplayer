@@ -106,7 +106,7 @@ public:
                 game->Send(msg);
                 std::cout << "[Player 2]: Sent user input: " << int(Game::userInput) << "\n";
             }
-            if (monst == num)
+            else if (monst == num)
             {
                 switch (Game::event.key.keysym.sym)
                 {
