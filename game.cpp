@@ -23,6 +23,7 @@ bool Game::lastSeconds[4] = {false, false, false, false};
 int Game::playerID = 0;
 UserInput Game::userInput = UserInput::DUMMY;
 UserInput Game::otherUserInput = UserInput::DUMMY;
+bool Game::toUpdate = true;
 std::vector<Vector2D> Game::initialPos;
 int livesleft = 3;
 bool Game::GameOver = false;
@@ -188,6 +189,11 @@ void Game ::handleEvents()
 
 void Game::update()
 {
+    Vector2D playerpos = player.getComponent<TransformComponent>().position;
+    Vector2D enemypos1 = enemy1.getComponent<TransformComponent>().position;
+    Vector2D enemypos2 = enemy2.getComponent<TransformComponent>().position;
+    Vector2D enemypos3 = enemy3.getComponent<TransformComponent>().position;
+    Vector2D enemypos4 = enemy4.getComponent<TransformComponent>().position;
     if (IsConnected())
     {
         while (!Incoming().empty())
@@ -212,6 +218,7 @@ void Game::update()
 
                     if (playerID == 1)
                     {
+                        Game::toUpdate = true;
                         enemy1.getComponent<enemyController>().update();
                         enemy2.getComponent<enemyController>().update();
                         enemy3.getComponent<enemyController>().update();
@@ -219,6 +226,7 @@ void Game::update()
                     }
                     else
                     {
+                        Game::toUpdate = true;
                         player.getComponent<Controller>().update();
                     }
                 }
@@ -229,15 +237,11 @@ void Game::update()
     }
     if (!GameOver)
     {
-        Vector2D playerpos = player.getComponent<TransformComponent>().position;
-        Vector2D enemypos1 = enemy1.getComponent<TransformComponent>().position;
-        Vector2D enemypos2 = enemy2.getComponent<TransformComponent>().position;
-        Vector2D enemypos3 = enemy3.getComponent<TransformComponent>().position;
-        Vector2D enemypos4 = enemy4.getComponent<TransformComponent>().position;
         std::stringstream ss;
         ss << "Lives left: " << livesleft;
         label.getComponent<UI>().SetText(ss.str(), "Itim");
         manager.refresh();
+        Game::toUpdate = false;
         manager.update();
 
         for (int i = 0; i < colliders.size(); i++)

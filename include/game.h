@@ -24,6 +24,7 @@ public:
 
     static int playerID;
     static UserInput otherUserInput, userInput;
+    static bool toUpdate;
     void init(int xpos, int ypos, int width, int height, bool fullscreen);
     void handleEvents();
     void update();

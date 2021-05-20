@@ -133,6 +133,8 @@ public:
                     }
                     transform->velocity.y = -1;
                     Game::userInput = UserInput::UP;
+                    Game::toUpdate = true;
+                    transform->update();
 
                     message<GameMsg> msg;
                     msg.header.id = GameMsg::Game_UserInput;
@@ -164,6 +166,8 @@ public:
                     }
                     transform->velocity.x = -1;
                     Game::userInput = UserInput::LEFT;
+                    Game::toUpdate = true;
+                    transform->update();
 
                     message<GameMsg> msg;
                     msg.header.id = GameMsg::Game_UserInput;
@@ -195,6 +199,8 @@ public:
                     }
                     transform->velocity.x = 1;
                     Game::userInput = UserInput::RIGHT;
+                    Game::toUpdate = true;
+                    transform->update();
 
                     message<GameMsg> msg;
                     msg.header.id = GameMsg::Game_UserInput;
@@ -226,6 +232,8 @@ public:
                     }
                     transform->velocity.y = 1;
                     Game::userInput = UserInput::DOWN;
+                    Game::toUpdate = true;
+                    transform->update();
 
                     message<GameMsg> msg;
                     msg.header.id = GameMsg::Game_UserInput;
@@ -250,6 +258,8 @@ public:
             {
                 transform->velocity.y = 0;
                 Game::userInput = UserInput::UP_UP;
+                Game::toUpdate = true;
+                transform->update();
 
                 message<GameMsg> msg;
                 msg.header.id = GameMsg::Game_UserInput;
@@ -262,6 +272,8 @@ public:
             {
                 transform->velocity.x = 0;
                 Game::userInput = UserInput::LEFT_UP;
+                Game::toUpdate = true;
+                transform->update();
 
                 message<GameMsg> msg;
                 msg.header.id = GameMsg::Game_UserInput;
@@ -274,6 +286,8 @@ public:
             {
                 transform->velocity.x = 0;
                 Game::userInput = UserInput::RIGHT_UP;
+                Game::toUpdate = true;
+                transform->update();
 
                 message<GameMsg> msg;
                 msg.header.id = GameMsg::Game_UserInput;
@@ -286,6 +300,8 @@ public:
             {
                 transform->velocity.y = 0;
                 Game::userInput = UserInput::DOWN_UP;
+                Game::toUpdate = true;
+                transform->update();
 
                 message<GameMsg> msg;
                 msg.header.id = GameMsg::Game_UserInput;
@@ -352,6 +368,8 @@ public:
                     }
 
                     transform->velocity.y = -1;
+                    Game::toUpdate = true;
+                    transform->update();
                 }
             }
             else if (key == UserInput::LEFT)
@@ -380,6 +398,8 @@ public:
                     }
 
                     transform->velocity.x = -1;
+                    Game::toUpdate = true;
+                    transform->update();
                 }
             }
             else if (key == UserInput::DOWN)
@@ -407,6 +427,8 @@ public:
                         }
                     }
                     transform->velocity.y = 1;
+                    Game::toUpdate = true;
+                    transform->update();
                 }
             }
             else if (key == UserInput::RIGHT)
@@ -435,23 +457,33 @@ public:
                     }
 
                     transform->velocity.x = 1;
+                    Game::toUpdate = true;
+                    transform->update();
                 }
             }
             else if (key == UserInput::UP_UP)
             {
                 transform->velocity.y = 0;
+                Game::toUpdate = true;
+                transform->update();
             }
             else if (key == UserInput::LEFT_UP)
             {
                 transform->velocity.x = 0;
+                Game::toUpdate = true;
+                transform->update();
             }
             else if (key == UserInput::DOWN_UP)
             {
                 transform->velocity.y = 0;
+                Game::toUpdate = true;
+                transform->update();
             }
             else if (key == UserInput::RIGHT_UP)
             {
                 transform->velocity.x = 0;
+                Game::toUpdate = true;
+                transform->update();
             }
             if (num == 4)
             {

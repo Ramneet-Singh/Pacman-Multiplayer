@@ -2,6 +2,7 @@
 #include <cstdint>
 
 #include "include/Networking.h"
+#include "include/Vector2D.h"
 
 enum class GameMsg : uint32_t
 {
