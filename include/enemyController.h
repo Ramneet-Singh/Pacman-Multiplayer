@@ -132,6 +132,7 @@ public:
                         }
                     }
                     transform->velocity.y = -1;
+                    transform->velocity.x = 0;
                     Game::userInput = UserInput::UP;
                     Game::toUpdate = true;
                     transform->update();
@@ -165,6 +166,7 @@ public:
                         }
                     }
                     transform->velocity.x = -1;
+                    transform->velocity.y = 0;
                     Game::userInput = UserInput::LEFT;
                     Game::toUpdate = true;
                     transform->update();
@@ -198,6 +200,7 @@ public:
                         }
                     }
                     transform->velocity.x = 1;
+                    transform->velocity.y = 0;
                     Game::userInput = UserInput::RIGHT;
                     Game::toUpdate = true;
                     transform->update();
@@ -231,6 +234,7 @@ public:
                         }
                     }
                     transform->velocity.y = 1;
+                    transform->velocity.x = 0;
                     Game::userInput = UserInput::DOWN;
                     Game::toUpdate = true;
                     transform->update();
@@ -368,6 +372,7 @@ public:
                     }
 
                     transform->velocity.y = -1;
+                    transform->velocity.x = 0;
                     Game::toUpdate = true;
                     transform->update();
                 }
@@ -398,6 +403,7 @@ public:
                     }
 
                     transform->velocity.x = -1;
+                    transform->velocity.y = 0;
                     Game::toUpdate = true;
                     transform->update();
                 }
@@ -427,6 +433,7 @@ public:
                         }
                     }
                     transform->velocity.y = 1;
+                    transform->velocity.x = 0;
                     Game::toUpdate = true;
                     transform->update();
                 }
@@ -457,6 +464,7 @@ public:
                     }
 
                     transform->velocity.x = 1;
+                    transform->velocity.y = 0;
                     Game::toUpdate = true;
                     transform->update();
                 }

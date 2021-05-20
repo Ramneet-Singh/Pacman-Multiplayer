@@ -38,13 +38,13 @@ public:
         if (path == "Assets/xx.png")
         {
             Animation idleR = Animation(0, 1, 1, 100);
-            Animation moveR = Animation(0, 0, 3, 100);
+            Animation moveR = Animation(0, 0, 3, 150);
             Animation idleL = Animation(1, 1, 1, 100);
-            Animation moveL = Animation(1, 0, 3, 100);
+            Animation moveL = Animation(1, 0, 3, 150);
             Animation idleU = Animation(2, 1, 1, 100);
-            Animation moveU = Animation(2, 0, 3, 100);
+            Animation moveU = Animation(2, 0, 3, 150);
             Animation idleD = Animation(3, 1, 1, 100);
-            Animation moveD = Animation(3, 0, 3, 100);
+            Animation moveD = Animation(3, 0, 3, 150);
             Animation die = Animation(4, 2, 12, 140);
 
             animations.emplace("idleR", idleR);
@@ -157,7 +157,7 @@ public:
             Play("idleR");
             srcRect.x = srcRect.w * (offsetX + static_cast<int>((SDL_GetTicks() / speed) % frames));
             srcRect.y = animIndex * transform->height;
-            entity->getComponent<TransformComponent>().position = Game::initialPos[4];
+            entity->getComponent<TransformComponent>().position = Game::initialPos;
             Game::dead = false;
         }
         else {
