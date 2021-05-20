@@ -68,21 +68,25 @@ Game::~Game()
 void Game::init(int xpos, int ypos, int width, int height, bool fullscreen)
 {
     int flags = 0;
-    if (fullscreen){
+    if (fullscreen)
+    {
         flags = SDL_WINDOW_FULLSCREEN;
     }
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0){
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    {
         std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << "\n";
     }
     win = SDL_CreateWindow("game", xpos, ypos, width, height, flags);
-    if (win == NULL){
+    if (win == NULL)
+    {
         std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
     }
     ren = SDL_CreateRenderer(win, -1, 0);
-    if (ren == NULL){
+    if (ren == NULL)
+    {
         std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << "\n";
     }
-    SDL_SetRenderDrawColor(ren, 255,255,255,255);
+    SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
     isRunning = true;
 
     // [rmnt]: Connect to server
@@ -91,8 +95,50 @@ void Game::init(int xpos, int ypos, int width, int height, bool fullscreen)
         std::cout << "Couldn't connect to server\n";
     }
 
+    if (IsConnected())
+    {
+        while (Incoming().empty())
+        {
+            continue;
+        }
+
+        auto msg = Incoming().pop_front().msg;
+
+        if (msg.header.id == GameMsg::Client_AssignID)
+        {
+            initMessage content;
+            msg >> content;
+            Game::playerID = content.playerID;
+            srand(content.randomSeed);
+
+            std::cout << "Player ID: " << Game::playerID << "\n";
+            std::cout << "Random Seed: " << content.randomSeed << "\n";
+        }
+        else
+        {
+            std::cout << "First Message Not as expected!\n";
+        }
+    }
+    else
+    {
+        std::cout << "Not Yet Connected!\n";
+    }
+
+    maze::generateMaze(); //generate the maze
+    int countTriggers = 0;
+    while (countTriggers < 8)
+    {
+        int x = rand() % 30 + 1;
+        int y = rand() % 22 + 1;
+        if (maze::mazeM[y][x] != 1)
+        {
+            maze::mazeM[y][x] = 3;
+            countTriggers++;
+        }
+    }
+
     MAP = new Map();
-    Map::LoadMap("maze.txt", 31, 23);
+    Map::LoadMap(31, 23);
 
     if (TTF_Init() == -1)
     {
@@ -113,22 +159,28 @@ void Game::init(int xpos, int ypos, int width, int height, bool fullscreen)
     intermission = Mix_LoadWAV("Assets/pacman_intermission.wav");
 
     pair<int, int> p = getCoordinates();
-    player.addComponent<TransformComponent>(p.first,p.second, 5);
+    player.addComponent<TransformComponent>(p.first, p.second, 5);
     player.addComponent<SpriteComponent>("Assets/xx.png", true, 0);
     player.addComponent<Controller>(this);
     player.addComponent<ColliderComponent>("player");
     initialPos = player.getComponent<TransformComponent>().position;
 
     pair<int, int> e = getCoordinates();
-    while (p == e) {e = getCoordinates();}
+    while (p == e)
+    {
+        e = getCoordinates();
+    }
     enemy1.addComponent<TransformComponent>(e.first, e.second, "1");
     enemy1.addComponent<SpriteComponent>("Assets/monsters1.png", true, 1);
     enemy1.addComponent<ColliderComponent>("enemy");
     enemy1.addComponent<enemyController>(1, this);
     enemy1.addGroup(groupEnemies);
-    
+
     e = getCoordinates();
-    while (p == e) {e = getCoordinates();}
+    while (p == e)
+    {
+        e = getCoordinates();
+    }
     enemy2.addComponent<TransformComponent>(e.first, e.second, "2");
     enemy2.addComponent<SpriteComponent>("Assets/monsters1.png", true, 2);
     enemy2.addComponent<ColliderComponent>("enemy");
@@ -136,15 +188,21 @@ void Game::init(int xpos, int ypos, int width, int height, bool fullscreen)
     enemy2.addGroup(groupEnemies);
 
     e = getCoordinates();
-    while (p == e) {e = getCoordinates();}
+    while (p == e)
+    {
+        e = getCoordinates();
+    }
     enemy3.addComponent<TransformComponent>(e.first, e.second, "3");
     enemy3.addComponent<SpriteComponent>("Assets/monsters1.png", true, 3);
     enemy3.addComponent<ColliderComponent>("enemy");
     enemy3.addComponent<enemyController>(3, this);
     enemy3.addGroup(groupEnemies);
-    
+
     e = getCoordinates();
-    while (p == e) {e = getCoordinates();}
+    while (p == e)
+    {
+        e = getCoordinates();
+    }
     enemy4.addComponent<TransformComponent>(e.first, e.second, "4");
     enemy4.addComponent<SpriteComponent>("Assets/monsters1.png", true, 4);
     enemy4.addComponent<ColliderComponent>("enemy");
@@ -195,12 +253,6 @@ void Game::update()
 
             switch (msg.header.id)
             {
-            case GameMsg::Client_AssignID:
-            {
-                msg >> Game::playerID;
-                std::cout << "Player ID: " << Game::playerID << "\n";
-                break;
-            }
 
             case GameMsg::Game_UserInput:
             {
@@ -303,7 +355,10 @@ void Game::update()
                         lastSeconds[mon - 1] = false;
                         triggerChange[mon - 1] = true;
                         pair<int, int> e = getCoordinates();
-                        while (e.first == playerpos.x and e.second == playerpos.y) {e = getCoordinates();}
+                        while (e.first == playerpos.x and e.second == playerpos.y)
+                        {
+                            e = getCoordinates();
+                        }
                         c->entity->getComponent<TransformComponent>().position = Vector2D(e.first, e.second);
                         count += 5;
                         std::stringstream ss1;
@@ -316,7 +371,10 @@ void Game::update()
                     {
                         dead = true;
                         pair<int, int> e = getCoordinates();
-                        while (e.first == playerpos.x and e.second == playerpos.y) {e = getCoordinates();}
+                        while (e.first == playerpos.x and e.second == playerpos.y)
+                        {
+                            e = getCoordinates();
+                        }
                         c->entity->getComponent<TransformComponent>().position = Vector2D(e.first, e.second);
                         player.getComponent<TransformComponent>().velocity.Zero();
                         Mix_PlayChannel(-1, death, 0);
@@ -505,17 +563,20 @@ TTF_Font *Game::GetFont(std::string id)
     return fonts[id];
 }
 
-pair<int, int> Game::getCoordinates(){
+pair<int, int> Game::getCoordinates()
+{
     int x = rand() % 30 + 1;
     int y = rand() % 22 + 1;
-    while (maze::mazeM[y][x] != 2){
+    while (maze::mazeM[y][x] != 2)
+    {
         x = rand() % 30 + 1;
         y = rand() % 22 + 1;
     }
-    return make_pair(x*40, y*40);
+    return make_pair(x * 40, y * 40);
 }
 
-bool Game::checkColl(std::string tagged){
+bool Game::checkColl(std::string tagged)
+{
     for (int i = 0; i < colliders.size(); i++)
     {
         auto &c = colliders[i];

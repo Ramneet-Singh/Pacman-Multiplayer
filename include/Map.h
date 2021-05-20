@@ -3,11 +3,12 @@
 
 #include "TextureManager.h"
 
-
-class Map{
+class Map
+{
 public:
     Map();
     ~Map();
-    static void LoadMap(std::string path, int sizeX, int sizeY);
+    static void LoadMap(int sizeX, int sizeY);
+
 private:
 };

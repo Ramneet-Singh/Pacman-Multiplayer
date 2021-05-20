@@ -35,3 +35,9 @@ enum class UserInput
     RIGHT_UP,
     DOWN_UP
 };
+
+struct initMessage
+{
+    int playerID;
+    time_t randomSeed;
+};

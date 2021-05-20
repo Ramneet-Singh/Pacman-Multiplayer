@@ -6,9 +6,11 @@ public:
     GameServer(uint16_t nPort) : server_interface<GameMsg>(nPort)
     {
         curPlayerID = 1;
+        randomSeed = time(0);
     }
 
     int curPlayerID;
+    time_t randomSeed;
 
 protected:
     bool OnClientConnect(std::shared_ptr<connection<GameMsg>> client) override
@@ -20,7 +22,10 @@ protected:
     {
         message<GameMsg> msg;
         msg.header.id = GameMsg::Client_AssignID;
-        msg << curPlayerID++;
+        initMessage content;
+        content.playerID = curPlayerID++;
+        content.randomSeed = randomSeed;
+        msg << content;
         client->Send(msg);
     }
 
