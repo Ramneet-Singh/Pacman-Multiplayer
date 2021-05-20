@@ -20,7 +20,7 @@ bool Collision::coll(const ColliderComponent& col1, const ColliderComponent& col
 {
 	if (coll(col1.collider, col2.collider) and col1.tag != col2.tag)
 	{
-		//std::cout << col1.tag << " hit " << col2.tag << std::endl;
+		// std::cout << col1.tag << " hit " << col2.tag << std::endl;
 		return  true;
 	}
 	else {
