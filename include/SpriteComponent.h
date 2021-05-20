@@ -157,7 +157,7 @@ public:
             Play("idleR");
             srcRect.x = srcRect.w * (offsetX + static_cast<int>((SDL_GetTicks() / speed) % frames));
             srcRect.y = animIndex * transform->height;
-            entity->getComponent<TransformComponent>().position = Game::initialPos[4];
+            entity->getComponent<TransformComponent>().position = Game::initialPos;
             Game::dead = false;
         }
         else {

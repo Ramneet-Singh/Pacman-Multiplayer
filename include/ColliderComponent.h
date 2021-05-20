@@ -29,18 +29,24 @@ public:
 
     void update() override
     {
-        // if (tag == "collectible"){
-        //     collider.x = static_cast<int> (transform->position.x) +10;
-        //     collider.y = static_cast<int> (transform->position.y) +10;
-        //     collider.w = 20;
-        //     collider.h = 20;
-        // }
-        // else {
-            collider.x = static_cast<int> (transform->position.x) +3;
-            collider.y = static_cast<int> (transform->position.y) +3;
-            collider.w = 34;
-            collider.h = 34;
-        // }
+        if (tag == "collectible"){
+            collider.x = static_cast<int> (transform->position.x) +10;
+            collider.y = static_cast<int> (transform->position.y) +10;
+            collider.w = 20;
+            collider.h = 20;
+        }
+        else if (tag == "obstacle"){
+            collider.x = static_cast<int> (transform->position.x) +5;
+            collider.y = static_cast<int> (transform->position.y) +5;
+            collider.w = 30;
+            collider.h = 30;
+        }
+        else {
+            collider.x = static_cast<int> (transform->position.x) +4;
+            collider.y = static_cast<int> (transform->position.y) +4;
+            collider.w = 32;
+            collider.h = 32;
+        }
     }
 
     void Destroy()

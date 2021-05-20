@@ -35,7 +35,8 @@ public:
     static std:: vector<ColliderComponent*> colliders;
     static std::map<std::string, TTF_Font*> fonts;
     static std:: vector<std::pair<std::pair<int, int>, bool>> collectibleStatus;
-    static std::vector<Vector2D> initialPos;
+    static Vector2D initialPos;
+    static pair<int, int> getCoordinates();
     static bool trigger[4];
     static bool triggerChange[4];
     static bool lastSeconds[4];

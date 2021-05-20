@@ -6,6 +6,7 @@
 #include "include/Vector2D.h"
 #include "include/Collision.h"
 #include "SDL2/SDL_mixer.h"
+#include "include/maze.h"
 #include <sstream>
 
 
@@ -21,7 +22,7 @@ std::vector<std::pair<std::pair<int, int>, bool>> Game::collectibleStatus;
 bool Game::trigger[4] = {false, false, false, false};
 bool Game::triggerChange[4] = {false, false, false, false};
 bool Game::lastSeconds[4] = {false, false, false, false};
-std::vector<Vector2D> Game::initialPos;
+Vector2D Game::initialPos;
 int livesleft = 3;
 bool Game::GameOver = false;
 bool Game::dead = false;
@@ -48,7 +49,6 @@ auto& P2wonLabel(manager.addEntity());
 enum groupLabels : std::size_t
 {
     groupMap,
-    groupPlayers,
     groupEnemies,
     groupColliders,
     groupCollectibles
@@ -66,25 +66,25 @@ void Game::init(int xpos, int ypos, int width, int height, bool fullscreen)
     if (fullscreen){
         flags = SDL_WINDOW_FULLSCREEN;
     }
-    if (SDL_Init(SDL_INIT_EVERYTHING) == 0){
-        std::cout << "SDL initialized\n";
-        win = SDL_CreateWindow("game", xpos, ypos, width, height, flags);
-        if (win){
-            std::cout << "window created\n";
-        }
-        ren = SDL_CreateRenderer(win, -1, 0);
-        if (ren){
-            SDL_SetRenderDrawColor(ren, 255,255,255,255);
-            std::cout << "Renderer created\n";
-        }
-        isRunning = true;
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0){
+        std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << "\n";
     }
+    win = SDL_CreateWindow("game", xpos, ypos, width, height, flags);
+    if (win == NULL){
+        std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << "\n";
+    }
+    ren = SDL_CreateRenderer(win, -1, 0);
+    if (ren == NULL){
+        std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError() << "\n";
+    }
+    SDL_SetRenderDrawColor(ren, 255,255,255,255);
+    isRunning = true;
     MAP = new Map();
-    Map::LoadMap("map0.txt", 32, 24);
+    Map::LoadMap("maze.txt", 31, 23);
 
     if (TTF_Init() == -1)
     {
-        std::cout << "Error with SDL_ttf\n";
+        std::cout << "SDL_ttf could not initialize! SDL_Error: " << SDL_GetError() << "\n";
     }
 
     if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
@@ -95,75 +95,73 @@ void Game::init(int xpos, int ypos, int width, int height, bool fullscreen)
     music = Mix_LoadMUS("Assets/pacman_beginning.wav");
     Mix_PlayMusic( music, 1);
 
-    chomp = Mix_LoadWAV("Assets/pacman_chomp.wav");
+    chomp = Mix_LoadWAV("Assets/pacman_chomp2.wav");
     death = Mix_LoadWAV("Assets/pacman_death.wav");
     eatGhost = Mix_LoadWAV("Assets/pacman_eatghost.wav");
     intermission = Mix_LoadWAV("Assets/pacman_intermission.wav");
 
-    player.addComponent<TransformComponent>(40,40);
+    pair<int, int> p = getCoordinates();
+    player.addComponent<TransformComponent>(p.first,p.second);
     player.addComponent<SpriteComponent>("Assets/xx.png", true, 0);
     player.addComponent<Controller>();
     player.addComponent<ColliderComponent>("player");
-    player.addGroup(groupPlayers);
+    initialPos = player.getComponent<TransformComponent>().position;
 
-    enemy1.addComponent<TransformComponent>(440, 400);
+    pair<int, int> e = getCoordinates();
+    while (p == e) {e = getCoordinates();}
+    enemy1.addComponent<TransformComponent>(e.first, e.second);
     enemy1.addComponent<SpriteComponent>("Assets/monsters1.png", true, 1);
     enemy1.addComponent<ColliderComponent>("enemy");
     enemy1.addComponent<enemyController>(1);
     enemy1.addGroup(groupEnemies);
-    initialPos.push_back(enemy1.getComponent<TransformComponent>().position);
 
-    enemy2.addComponent<TransformComponent>(480, 400);
+    e = getCoordinates();
+    while (p == e) {e = getCoordinates();}
+    enemy2.addComponent<TransformComponent>(e.first, e.second);
     enemy2.addComponent<SpriteComponent>("Assets/monsters1.png", true, 2);
     enemy2.addComponent<ColliderComponent>("enemy");
     enemy2.addComponent<enemyController>(2);
     enemy2.addGroup(groupEnemies);
-    initialPos.push_back(enemy2.getComponent<TransformComponent>().position);
 
-    enemy3.addComponent<TransformComponent>(520, 400);
+    e = getCoordinates();
+    while (p == e) {e = getCoordinates();}
+    enemy3.addComponent<TransformComponent>(e.first, e.second);
     enemy3.addComponent<SpriteComponent>("Assets/monsters1.png", true, 3);
     enemy3.addComponent<ColliderComponent>("enemy");
     enemy3.addComponent<enemyController>(3);
     enemy3.addGroup(groupEnemies);
-    initialPos.push_back(enemy3.getComponent<TransformComponent>().position);
     
-    enemy4.addComponent<TransformComponent>(560, 400);
+    e = getCoordinates();
+    while (p == e) {e = getCoordinates();}
+    enemy4.addComponent<TransformComponent>(e.first, e.second);
     enemy4.addComponent<SpriteComponent>("Assets/monsters1.png", true, 4);
     enemy4.addComponent<ColliderComponent>("enemy");
     enemy4.addComponent<enemyController>(4);
     enemy4.addGroup(groupEnemies);
-    initialPos.push_back(enemy4.getComponent<TransformComponent>().position);
-    initialPos.push_back(player.getComponent<TransformComponent>().position);
 
     SDL_Color white = {255, 255, 255, 255};
-    AddFont("Itim", "Assets/Itim.ttf", 20);
-    AddFont("Itim2", "Assets/Itim.ttf", 60);
-    AddFont("Itim3", "Assets/Itim.ttf", 30);
-    label.addComponent<UI>(10, 10, "Lives left: 3", "Itim", white);
-    label2.addComponent<UI>(150, 10, "Score: 0", "Itim", white);
-    gameOverLabel.addComponent<UI>(480, 360, "GAME OVER", "Itim2", white);
-    P1wonLabel.addComponent<UI>(550, 430, "Player 1 won!", "Itim3", white);
-    P2wonLabel.addComponent<UI>(550, 430, "Player 2 won!", "Itim3", white);
+    // AddFont("Itim", "Assets/Itim.ttf", 20);
+    // AddFont("Itim2", "Assets/Itim.ttf", 60);
+    AddFont("Lobster", "Assets/Lobster.ttf", 22);
+    AddFont("Lobster2", "Assets/Lobster.ttf", 30);
+    AddFont("Girassol", "Assets/Girassol.ttf", 70);
+    label.addComponent<UI>(10, 5, "Lives left: 3", "Lobster", white);
+    label2.addComponent<UI>(150, 5, "Score: 0", "Lobster", white);
+    gameOverLabel.addComponent<UI>(480, 360, "GAME OVER", "Girassol", white);
+    P1wonLabel.addComponent<UI>(550, 450, "player 1 won!", "Lobster2", white);
+    P2wonLabel.addComponent<UI>(550, 450, "player 2 won!", "Lobster2", white);
 }
 
 auto& tiles(manager.getGroup(groupMap));
-auto& players(manager.getGroup(groupPlayers));
 auto& enemies(manager.getGroup(groupEnemies));
 auto& collectibles(manager.getGroup(groupCollectibles));
 
 void Game :: handleEvents()
 {
-    
-    
     SDL_PollEvent(&event);
     switch (event.type) {
         case SDL_QUIT:
             isRunning = false;
-            break;
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_r){
-                restart = true;
-            }
             break;
         default:
             break;
@@ -180,7 +178,7 @@ void Game:: update()
         Vector2D enemypos4 = enemy4.getComponent<TransformComponent>().position;
         std::stringstream ss;
         ss << "Lives left: " << livesleft;
-        label.getComponent<UI>().SetText(ss.str(), "Itim");
+        label.getComponent<UI>().SetText(ss.str(), "Lobster");
         manager.refresh();
         manager.update();
 
@@ -197,7 +195,7 @@ void Game:: update()
                     count++;
                     std::stringstream ss1;
                     ss1 << "Score: " << count;
-                    label2.getComponent<UI>().SetText(ss1.str(), "Itim");
+                    label2.getComponent<UI>().SetText(ss1.str(), "Lobster");
                     int xp = c->transform->position.x;
                     int yp = c->transform->position.y;
                     for (int j=0; j<collectibleStatus.size(); j++){
@@ -228,7 +226,7 @@ void Game:: update()
                     count += 2;
                     std::stringstream ss1;
                     ss1 << "Score: " << count;
-                    label2.getComponent<UI>().SetText(ss1.str(), "Itim");
+                    label2.getComponent<UI>().SetText(ss1.str(), "Lobster");
                     render();
                     break;
                 }
@@ -239,29 +237,21 @@ void Game:: update()
                         trigger[mon -1] = false;
                         lastSeconds[mon-1] = false;
                         triggerChange[mon - 1] = true;
-                        c->entity->getComponent<TransformComponent>().position = initialPos[mon-1];
-                        if (mon == 1){
-                            enemypos1 = initialPos[0];
-                        }
-                        else if (mon == 2){
-                            enemypos2 = initialPos[1];
-                        }
-                        else if (mon == 3){
-                            enemypos3 = initialPos[2];
-                        }
-                        else if (mon == 4){
-                            enemypos4 = initialPos[3];
-                        }
-                        count += 10;
+                        pair<int, int> e = getCoordinates();
+                        while (e.first == playerpos.x and e.second == playerpos.y) {e = getCoordinates();}
+                        c->entity->getComponent<TransformComponent>().position = Vector2D(e.first, e.second);
+                        count += 5;
                         std::stringstream ss1;
                         ss1 << "Score: " << count;
-                        label2.getComponent<UI>().SetText(ss1.str(), "Itim");
+                        label2.getComponent<UI>().SetText(ss1.str(), "Lobster");
                         render();
                         break;
                     }
                     else {
                         dead = true;
-                        c->entity->getComponent<TransformComponent>().position = initialPos[mon-1];
+                        pair<int, int> e = getCoordinates();
+                        while (e.first == playerpos.x and e.second == playerpos.y) {e = getCoordinates();}
+                        c->entity->getComponent<TransformComponent>().position = Vector2D(e.first, e.second);
                         player.getComponent<TransformComponent>().velocity.Zero();
                         Mix_PlayChannel(-1, death, 0);
                         player.getComponent<SpriteComponent>().Play("die");
@@ -326,23 +316,6 @@ void Game:: update()
             render();
         }
     }
-
-    // for (auto& c : colliders)
-    // {
-    //     if (Collision::coll(*c, player.getComponent<ColliderComponent>()))
-    //     {
-    //         if (c->tag == "obstacle"){
-    //             player.getComponent<TransformComponent>().position = playerpos;
-    //         }
-    //         else if (c->tag == "collectible")
-    //         {
-    //             c->Destroy();
-    //             break;
-    //         }
-    //     }
-        
-    // }
-    
 }
 
 void Game::render()
@@ -367,10 +340,7 @@ void Game::render()
                 c->draw();
             }
         }
-        for (auto& p : players)
-        {
-            p->draw();
-        }
+        player.draw();
         for (auto& e : enemies)
         {
             e->draw();
@@ -437,4 +407,14 @@ void Game::AddFont(std::string id, std::string path, int fontSize)
 TTF_Font* Game::GetFont(std::string id)
 {
     return fonts[id];
+}
+
+pair<int, int> Game::getCoordinates(){
+    int x = rand() % 30 + 1;
+    int y = rand() % 22 + 1;
+    while (maze::mazeM[y][x] != 2){
+        x = rand() % 30 + 1;
+        y = rand() % 22 + 1;
+    }
+    return make_pair(x*40, y*40);
 }

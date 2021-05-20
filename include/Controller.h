@@ -48,7 +48,7 @@ public:
                 }
             }
 
-            if (Game::event.type == SDL_KEYUP)
+            else if (Game::event.type == SDL_KEYUP)
             {
                 switch (Game::event.key.keysym.sym)
                 {
