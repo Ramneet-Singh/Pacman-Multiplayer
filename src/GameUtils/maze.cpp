@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "include/maze.h"
+#include "Game/Utils/maze.h"
 
 long numin=1;
 const int sizeX=17;

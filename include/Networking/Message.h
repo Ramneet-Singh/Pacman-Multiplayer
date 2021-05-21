@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdint>
 
-#include "include/Networking.h"
-#include "include/Vector2D.h"
+#include "Networking/Networking.h"
+#include "Game/Utils/Vector2D.h"
 
 enum class GameMsg : uint32_t
 {

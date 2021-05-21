@@ -1,12 +1,12 @@
 #pragma once
-#include "include/game.h"
-#include "include/entity.h"
-#include "include/Components.h"
-#include "include/Map.h"
-#include "include/Vector2D.h"
-#include "include/Collision.h"
+#include "Game/game.h"
+#include "Game/Components/entity.h"
+#include "Game/Components/Components.h"
+#include "Game/Utils/Map.h"
+#include "Game/Utils/Vector2D.h"
+#include "Game/Collision.h"
 #include "SDL2/SDL_mixer.h"
-#include "include/maze.h"
+#include "Game/Utils/maze.h"
 #include <sstream>
 
 Map *MAP;

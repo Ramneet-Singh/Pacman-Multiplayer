@@ -1,10 +1,10 @@
 #pragma once
-#include "Components.h"
+#include "Game/Components/Components.h"
 #include "SDL2/SDL.h"
-#include "TextureManager.h"
-#include "Animation.h"
+#include "Game/TextureManager.h"
+#include "Game/Animation.h"
 #include <map>
-#include "game.h"
+#include "Game/game.h"
 
 class SpriteComponent : public Component
 {

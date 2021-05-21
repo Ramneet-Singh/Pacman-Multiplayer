@@ -1,8 +1,8 @@
 #pragma once
 
-#include "game.h"
-#include "entity.h"
-#include "Components.h"
+#include "Game/game.h"
+#include "Game/Components/entity.h"
+#include "Game/Components/Components.h"
 #include <string>
 
 class enemyController : public Component

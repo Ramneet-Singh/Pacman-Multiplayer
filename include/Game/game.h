@@ -8,11 +8,11 @@ using namespace std;
 #include <SDL2/SDL_image.h>
 #include <vector>
 #include "SDL2/SDL_ttf.h"
-#include "Vector2D.h"
+#include "Game/Utils/Vector2D.h"
 #include <map>
 
-#include "Networking.h"
-#include "Message.h"
+#include "Networking/Networking.h"
+#include "Networking/Message.h"
 
 class ColliderComponent;
 

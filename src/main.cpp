@@ -1,5 +1,5 @@
-#include "include/game.h"
-#include "include/maze.h"
+#include "Game/game.h"
+#include "Game/Utils/maze.h"
 #include <fstream>
 
 Game *game = nullptr;

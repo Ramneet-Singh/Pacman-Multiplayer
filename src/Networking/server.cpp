@@ -1,4 +1,4 @@
-#include "include/Message.h"
+#include "Networking/Message.h"
 
 class GameServer : public server_interface<GameMsg>
 {
@@ -13,10 +13,6 @@ public:
     time_t randomSeed;
 
 protected:
-    bool OnClientConnect(std::shared_ptr<connection<GameMsg>> client) override
-    {
-        return true;
-    }
 
     void OnClientValidated(std::shared_ptr<connection<GameMsg>> client) override
     {

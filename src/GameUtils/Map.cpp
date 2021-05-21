@@ -1,6 +1,6 @@
-#include "include/Map.h"
-#include "include/game.h"
-#include "include/maze.h"
+#include "Game/Utils/Map.h"
+#include "Game/game.h"
+#include "Game/Utils/maze.h"
 #include <fstream>
 
 Map::Map()

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "entity.h"
-#include "game.h"
-#include "TextureManager.h"
+#include "Game/Components/entity.h"
+#include "Game/game.h"
+#include "Game/TextureManager.h"
 #include <string>
 
 class UI : public Component

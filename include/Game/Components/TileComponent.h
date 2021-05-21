@@ -1,7 +1,7 @@
 #pragma once
 
-#include "entity.h"
-#include "TransformComponent.h"
+#include "Game/Components/entity.h"
+#include "Game/Components/TransformComponent.h"
 #include "SDL2/SDL.h"
 
 class TileComponent : public Component

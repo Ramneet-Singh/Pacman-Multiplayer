@@ -1,8 +1,8 @@
 #pragma once
-#include "Components.h"
-#include "Vector2D.h"
-#include "game.h"
-#include "Collision.h"
+#include "Game/Components/Components.h"
+#include "Game/Utils/Vector2D.h"
+#include "Game/game.h"
+#include "Game/Collision.h"
 #include <string>
 
 class TransformComponent : public Component

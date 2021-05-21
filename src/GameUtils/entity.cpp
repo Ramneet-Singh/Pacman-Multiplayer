@@ -1,4 +1,4 @@
-#include "include/entity.h"
+#include "Game/Components/entity.h"
 
 void Entity::addGroup(Group mGroup)
 {

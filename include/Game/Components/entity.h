@@ -6,7 +6,7 @@
 #include <bitset>
 #include <array>
 
-#include "include/game.h"
+#include "Game/game.h"
 
 class Component;
 class Entity;

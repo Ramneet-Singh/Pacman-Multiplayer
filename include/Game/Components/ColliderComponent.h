@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "SDL2/SDL.h"
-#include "Components.h"
+#include "Game/Components/Components.h"
 
 class ColliderComponent : public Component
 {
