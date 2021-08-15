@@ -1,5 +1,5 @@
 # Pacman-Multiplayer
-A multiplayer version of the classic Pacman, built using SDL2 and asyncio
+A multiplayer version of the classic game Pacman, built using SDL2 for graphics and asyncio for networking. Please see our slides [here](https://docs.google.com/presentation/d/1NEsNa0QuZiD1fUpPnKywLjQBMWJC9w_j7ztHdNSI88s/edit?usp=sharing) for a description of how the game works.
 
 #### Instructions to run
 1. Type `make` in the terminal to compile the files and generate two executables namely `game` and `server`.
